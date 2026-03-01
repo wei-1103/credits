@@ -261,9 +261,10 @@ const App = (() => {
       tbody.querySelectorAll("[data-del]").forEach(btn=>{
         btn.addEventListener("click", ()=>{
           state.courses = state.courses.filter(c => c.id !== btn.dataset.del);
+          renderCourseCards(state.courses);
           saveState();
           renderCredits();
-          renderCourseCards(state.courses);
+          
         });
       });
     }
@@ -729,7 +730,7 @@ function renderCourseCards(courses){
     `;
   }).join("");
 
-  // ✅ 刪除：用事件委派
+  // 刪除：事件委派
   wrap.onclick = (e) => {
     const btn = e.target.closest("button[data-action='delete']");
     if(!btn) return;
@@ -738,7 +739,7 @@ function renderCourseCards(courses){
 
     const id = card.dataset.id;
 
-    // ✅ 直接用你現有的 storage key 刪資料
+    // 用同一個 STORAGE_KEY 刪掉資料
     const STORAGE_KEY = "grad_checker_split_v1";
     const raw = localStorage.getItem(STORAGE_KEY);
     if(!raw) return;
@@ -747,7 +748,16 @@ function renderCourseCards(courses){
     s.courses = (s.courses || []).filter(x => x.id !== id);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
 
-    // ✅ 重新整理頁面（最簡單保證同步 table + KPI）
+    // 重新整理讓 table + KPI + cards 同步
     location.reload();
   };
+}
+
+function escapeHtml(str){
+  return String(str)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
 }

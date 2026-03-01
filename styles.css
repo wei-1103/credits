@@ -1692,3 +1692,55 @@ a, a:visited{
   table { display: none; }
   .courseCards { display: grid; gap: 12px; }
 }
+/* ===== 手機課程清單：表格 -> 卡片 ===== */
+.courseCards{ display:none; margin-top:12px; }
+
+/* 卡片基本樣式 */
+.courseCard{
+  border: 1px solid rgba(40,38,33,.28);
+  border-radius: 14px;
+  background: #fff;
+  padding: 14px;
+}
+
+.courseTitle{
+  margin: 0 0 8px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.courseMeta{
+  font-size: 14px;
+  line-height: 1.7;
+  opacity: .9;
+}
+
+.badges{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:10px;
+}
+
+.badgePill{
+  display:inline-flex;
+  align-items:center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(40,38,33,.28);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.badgePill.ok{ border-color: rgba(10,122,47,.25); color:#0a7a2f; }
+.badgePill.bad{ border-color: rgba(176,0,32,.25); color:#b00020; }
+
+.cardActions{ margin-top: 12px; }
+.cardActions button{ width:100%; }
+
+/* ✅ 手機：隱藏 table，顯示 cards */
+@media (max-width: 768px){
+  .table-wrap{ display:block; } /* table-wrap 不要消失 */
+  table{ display:none; }
+  .courseCards{ display:grid; gap:12px; }
+}
