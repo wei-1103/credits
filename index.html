@@ -1,0 +1,168 @@
+
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Graduation Checker</title>
+
+<style>
+
+:root{
+  --ink:#282621;
+  --paper:#fffdf7;
+}
+
+/* ===== Reset ===== */
+*{ box-sizing:border-box; }
+
+a{
+  text-decoration:none;
+  color:inherit;
+}
+
+a:visited,
+a:active{
+  color:inherit;
+}
+
+/* ===== Page Base ===== */
+body{
+  margin:0;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background: var(--paper);
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans TC", sans-serif;
+  color:var(--ink);
+  letter-spacing:.02em;
+
+  background-image:
+    radial-gradient(rgba(0,0,0,.02) 1px, transparent 1px);
+  background-size: 4px 4px;
+}
+
+/* 左上角小字 */
+.edition{
+  position:fixed;
+  top:20px;
+  left:20px;
+  font-size:12px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  opacity:.6;
+}
+
+/* 中央卡片 */
+.intro-card{
+  width:100%;
+  max-width:520px;
+  padding:64px 56px;
+  border:1px solid rgba(40,38,33,.2);
+  border-radius:20px;
+  backdrop-filter: blur(16px);
+  background: rgba(255,255,255,.7);
+  text-align:center;
+
+  opacity:0;
+  transform: translateY(20px);
+  animation: fadeIn 1s ease forwards;
+}
+
+/* 標題 */
+.intro-title{
+  margin:0 0 18px;
+  font-size:18px;
+  font-weight:700;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
+
+/* 副標 */
+.intro-sub{
+  margin:0 0 48px;
+  font-size:14px;
+  line-height:1.8;
+  opacity:.75;
+}
+
+/* 按鈕 */
+.intro-btn{
+  display:inline-block;
+  padding:10px 26px;
+  border:1px solid var(--ink);
+  border-radius:999px;
+  font-size:14px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  transition:.35s cubic-bezier(.27,.83,.64,1);
+}
+
+.intro-btn:hover{
+  background:var(--ink);
+  color:#fff;
+}
+
+/* 淡入 */
+@keyframes fadeIn{
+  to{
+    opacity:1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================
+   📱 Mobile Optimization
+   ========================= */
+@media(max-width:768px){
+
+  body{
+    padding:20px;
+    align-items:center;
+  }
+
+  .intro-card{
+    padding:48px 28px;
+  }
+
+  .intro-title{
+    font-size:17px;
+  }
+
+  .intro-sub{
+    font-size:14px;
+    margin-bottom:36px;
+  }
+
+  .intro-btn{
+    font-size:14px;
+    padding:10px 22px;
+  }
+
+  .edition{
+    top:14px;
+    left:16px;
+    font-size:11px;
+  }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="edition">2026 Edition</div>
+
+<div class="intro-card">
+  <h1 class="intro-title">Graduation Checker</h1>
+  <p class="intro-sub">
+    畢業學分與門檻檢核系統<br>
+    English Requirement × Credit × Hours
+  </p>
+
+  <a href="requirements.html" class="intro-btn">Enter</a>
+</div>
+
+</body>
+</html>
