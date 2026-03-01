@@ -1685,3 +1685,10 @@ a, a:visited{
   color: #fff !important;
   text-decoration: none !important;
 }
+.courseCards { display: none; }
+
+@media (max-width: 768px){
+  .table-wrap { display: block; }
+  table { display: none; }
+  .courseCards { display: grid; gap: 12px; }
+}

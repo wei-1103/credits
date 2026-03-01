@@ -147,6 +147,7 @@ const App = (() => {
       $("courseName").value = "";
       saveState();
       renderCredits();
+      renderCourseCards(state.courses);
     });
 
     $("seedBtn").addEventListener("click", () => {
@@ -160,6 +161,7 @@ const App = (() => {
       ];
       saveState();
       renderCredits();
+      renderCourseCards(state.courses);
     });
 
     $("clearBtn").addEventListener("click", () => {
@@ -167,6 +169,7 @@ const App = (() => {
         state = clone(defaultState);
         saveState();
         renderCredits();
+        renderCourseCards(state.courses);
       }
     });
 
@@ -174,6 +177,7 @@ const App = (() => {
     $("appendCsvBtn").addEventListener("click", () => importCsv(true));
 
     renderCredits();
+    renderCourseCards(state.courses);
   }
 
   function importCsv(append){
@@ -210,6 +214,7 @@ const App = (() => {
 
     saveState();
     renderCredits();
+    renderCourseCards(state.courses);
     alert(`匯入完成：${imported.length} 筆`);
   }
 
@@ -258,6 +263,7 @@ const App = (() => {
           state.courses = state.courses.filter(c => c.id !== btn.dataset.del);
           saveState();
           renderCredits();
+          renderCourseCards(state.courses);
         });
       });
     }
@@ -693,54 +699,55 @@ function renderCourseCards(courses){
   const wrap = document.getElementById("courseCards");
   if(!wrap) return;
 
+  if(!courses || courses.length === 0){
+    wrap.innerHTML = `<div class="muted">尚未新增課程</div>`;
+    return;
+  }
+
   wrap.innerHTML = courses.map(c => {
-    const statusText = c.status === "passed" ? "通過" : (c.status === "taking" ? "修課中" : "未通過");
-    const statusClass = c.status === "passed" ? "ok" : "bad";
+    const statusText = c.passed ? "通過" : "未通過 / 修課中";
+    const statusClass = c.passed ? "ok" : "bad";
 
     return `
       <div class="courseCard" data-id="${c.id}">
-        <div class="courseCard__top">
-          <div>
-            <h3 class="courseTitle">${escapeHtml(c.name)}</h3>
-            <div class="courseMeta">
-              <div><b>分類：</b>${escapeHtml(c.category)}</div>
-              <div><b>學分：</b>${escapeHtml(String(c.credits))}</div>
-            </div>
+        <h3 class="courseTitle">${escapeHtml(c.name)}</h3>
 
-            <div class="badges">
-              <span class="badgePill">${escapeHtml(c.category)}</span>
-              <span class="badgePill ${statusClass}">${statusText}</span>
-            </div>
+        <div class="courseMeta">
+          <div><b>分類：</b>${escapeHtml(c.cat)}</div>
+          <div><b>學分：</b>${escapeHtml(String(Number(c.credits)||0))}</div>
+        </div>
 
-            <div class="cardActions">
-              <button class="danger" data-action="delete">刪除</button>
-            </div>
-          </div>
+        <div class="badges">
+          <span class="badgePill">${escapeHtml(c.cat)}</span>
+          <span class="badgePill ${statusClass}">${statusText}</span>
+        </div>
+
+        <div class="cardActions">
+          <button class="danger" data-action="delete">刪除</button>
         </div>
       </div>
     `;
   }).join("");
 
-  // 事件：刪除（用事件委派）
+  // ✅ 刪除：用事件委派
   wrap.onclick = (e) => {
     const btn = e.target.closest("button[data-action='delete']");
     if(!btn) return;
     const card = e.target.closest(".courseCard");
     if(!card) return;
-    const id = card.dataset.id;
-    // ✅ 這裡呼叫你原本的刪除方法（把 removeCourseById 換成你專案裡的函式）
-    if(typeof App?.removeCourseById === "function"){
-      App.removeCourseById(id);
-    }
-  };
-}
 
-// 小工具：避免 XSS / 特殊字元破版
-function escapeHtml(str){
-  return String(str)
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
+    const id = card.dataset.id;
+
+    // ✅ 直接用你現有的 storage key 刪資料
+    const STORAGE_KEY = "grad_checker_split_v1";
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return;
+
+    const s = JSON.parse(raw);
+    s.courses = (s.courses || []).filter(x => x.id !== id);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+
+    // ✅ 重新整理頁面（最簡單保證同步 table + KPI）
+    location.reload();
+  };
 }
