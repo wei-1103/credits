@@ -1768,3 +1768,14 @@ a, a:visited{
   text-transform: none; /* ✅ 關掉 uppercase */
   cursor: pointer;
 }
+.poster{
+  border-radius: 25px 25px 0 0;
+  overflow: hidden;
+}
+
+.poster img{
+  width: 100%;
+  height: 300px;     /* 你想要多高就改這裡 */
+  object-fit: cover; /* 自動裁切成橫幅 */
+  display: block;
+}
