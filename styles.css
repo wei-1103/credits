@@ -1606,4 +1606,19 @@ a{
 .intro-btn:hover{
   background:#fff;
   color:#282621;
+
+}
+/* =========================
+   📱 Mobile Card Layout
+   ========================= */
+@media (max-width:768px){
+
+  table{
+    display:none;
+  }
+
+  .mobile-card{
+    display:block;
+  }
+
 }
