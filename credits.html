@@ -29,23 +29,35 @@
     <p class="section-note">下面輸入課程資料以及是否通過</p>
 
     <div class="grid">
+      <!-- 左：輸入 -->
       <section class="card">
         <div class="poster" aria-hidden="true"></div>
         <div class="card-inner">
           <div class="module">
             <h3 class="section-title" style="margin:0">新增課程</h3>
 
+            <!-- 課名 / 分類 -->
             <div class="row">
               <div>
                 <label>課名</label>
                 <input id="courseName" placeholder="例：日語聽解（二）" />
               </div>
+
               <div>
                 <label>課程分類</label>
                 <select id="courseCat"></select>
               </div>
             </div>
 
+            <!-- ✅ 專業選修領域：只有在「分類=專業選修」才顯示 -->
+            <div id="fieldRow" style="display:none; margin-top:12px;">
+              <label>專業選修領域</label>
+              <select id="courseField">
+                <option value="">請選擇領域</option>
+              </select>
+            </div>
+
+            <!-- 學分 / 狀態 -->
             <div class="row">
               <div>
                 <label>學分</label>
@@ -58,6 +70,14 @@
                   <option value="false">未通過 / 修課中</option>
                 </select>
               </div>
+            </div>
+
+            <!-- 外系選修（選填） -->
+            <div style="margin-top:12px;">
+              <label style="display:flex; gap:10px; align-items:center; margin-top:6px; text-transform:none;">
+                <input type="checkbox" id="courseOutsideDept" />
+                這門課是外系選修
+              </label>
             </div>
 
             <div class="btns">
@@ -84,6 +104,7 @@
         </div>
       </section>
 
+      <!-- 右：摘要 -->
       <aside class="card">
         <div class="card-inner">
           <h3 class="section-title" style="margin:0">摘要</h3>
@@ -101,6 +122,7 @@
       </aside>
     </div>
 
+    <!-- 清單 -->
     <section class="card" style="margin-top:18px">
       <div class="card-inner">
         <h3 class="section-title" style="margin:0">課程清單</h3>
@@ -119,7 +141,9 @@
             </thead>
             <tbody id="courseTable"></tbody>
           </table>
-          </div><div id="courseCards" class="courseCards" aria-label="課程清單（手機版）"></div>
+
+          <!-- 📱 手機卡片版（由 JS renderCourseCards 塞內容） -->
+          <div id="courseCards" class="courseCards" aria-label="課程清單（手機版）"></div>
         </div>
       </div>
     </section>

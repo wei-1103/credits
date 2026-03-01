@@ -31,6 +31,87 @@
 
     <div class="grid">
 <section class="card">
+    <section class="card" style="margin-top:18px">
+  <div class="card-inner">
+    <h3 class="section-title" style="margin:0">系規定（可選）</h3>
+    <p class="section-note">不同學校/不同科系可自行開關與設定專業選修領域規則。</p>
+
+    <div class="row">
+      <div>
+        <label>啟用系規定</label>
+        <select id="deptEnabled">
+          <option value="false">不啟用</option>
+          <option value="true">啟用</option>
+        </select>
+      </div>
+
+      <div>
+        <label>外系選修至少門數</label>
+        <input id="deptOutsideMin" type="number" min="0" step="1" value="2" />
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:12px">
+      <div>
+        <label>啟用「專業選修領域規則」</label>
+        <select id="deptElectiveEnabled">
+          <option value="false">不啟用</option>
+          <option value="true">啟用</option>
+        </select>
+      </div>
+
+      <div class="notice">
+        你可以針對不同學校新增不同領域，新增課程時（分類=專業選修）就會要求選領域。
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:12px">
+      <div>
+        <label>同領域至少門數（例如 2）</label>
+        <input id="deptSameFieldMin" type="number" min="0" step="1" value="2" />
+      </div>
+      <div>
+        <label>跨領域至少領域數（例如 3）</label>
+        <input id="deptCrossFieldMin" type="number" min="0" step="1" value="3" />
+      </div>
+    </div>
+
+    <div style="margin-top:14px">
+      <h4 class="section-title" style="margin:0 0 10px">專業選修領域清單</h4>
+
+      <div class="row">
+        <div>
+          <label>新增領域名稱</label>
+          <input id="newFieldName" placeholder="例：資料科學與應用" />
+        </div>
+        <div class="btns" style="align-items:flex-end">
+          <button class="primary" id="addFieldBtn">新增領域</button>
+          <button id="clearFieldsBtn" class="danger">清空領域</button>
+        </div>
+      </div>
+
+      <div class="table-wrap" style="margin-top:12px">
+        <table>
+          <thead>
+            <tr>
+              <th>領域名稱</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="fieldTable"></tbody>
+        </table>
+      </div>
+
+      <div class="notice" style="margin-top:12px">
+        小提醒：如果你刪除某個領域，已經選到該領域的課程仍會保留 fieldId，但它會顯示不出名稱；你可以再去編輯/刪掉那些課程。
+      </div>
+    </div>
+
+    <div class="btns" style="margin-top:14px">
+      <button class="primary" id="saveDeptBtn">儲存系規定設定</button>
+    </div>
+  </div>
+</section>
   <div class="card__inner">
 
     <h1 class="h1">Graduation Requirements</h1>
@@ -199,7 +280,13 @@
     </section>
   </main>
 
+  
   <script src="./app.js"></script>
-  <script>App.initRequirementsPage();</script>
+  
+  <script>App.initRequirementsPage(
+
+    
+  );</script>
+  
 </body>
 </html>
