@@ -1744,3 +1744,27 @@ a, a:visited{
   table{ display:none; }
   .courseCards{ display:grid; gap:12px; }
 }
+/* ✅ checkbox 行：不要被全站 label 影響 */
+.checkline{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-top: 10px;
+}
+
+.checkline input{
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+}
+
+.checkline__label{
+  margin: 0;
+  display: inline;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  letter-spacing: normal;
+  text-transform: none; /* ✅ 關掉 uppercase */
+  cursor: pointer;
+}
