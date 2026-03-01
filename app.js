@@ -188,24 +188,21 @@ const App = (() => {
 
     if (!fieldRow || !sel) return;
 
-    // 取得規則路徑
-    const deptRule = state.requirements.deptRule;
-    const electiveRule = deptRule?.electiveRule;
+    // 使用預設空物件 {} 避免讀取屬性時出錯
+    const dept = state.requirements.deptRule || {};
+    const elective = dept.electiveRule || {};
 
-    // 修正後的判斷：系規則啟用 + 選修領域規則啟用 + 分類是專業選修
-    if (deptRule?.enabled && electiveRule?.enabled && cat === "專業選修") {
+    // 嚴格檢查是否都為 true
+    const shouldShow = dept.enabled && elective.enabled && cat === "專業選修";
+
+    if (shouldShow) {
       fieldRow.style.display = "block";
-
-      const fields = electiveRule.fields || [];
-      const options = fields.map(f =>
-        `<option value="${escapeHtml(f.id)}">${escapeHtml(f.name)}</option>`
-      ).join("");
-
-      sel.innerHTML = `<option value="">請選擇領域</option>${options}`;
+      const fields = elective.fields || [];
+      sel.innerHTML = `<option value="">請選擇領域</option>` + 
+        fields.map(f => `<option value="${f.id}">${f.name}</option>`).join("");
     } else {
       fieldRow.style.display = "none";
       sel.innerHTML = `<option value="">請選擇領域</option>`;
-      sel.value = ""; // 清空選擇值
     }
   }
 
@@ -1029,7 +1026,8 @@ const App = (() => {
   return {
     initCreditsPage,
     initRequirementsPage,
-    removeCourseById
+    removeCourseById,
+    state
   };
 })();
 
