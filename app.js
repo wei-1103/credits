@@ -689,3 +689,58 @@ document.addEventListener("DOMContentLoaded", () => {
     status.textContent = cb.checked ? "狀態：已完成修課替代 ✅" : "狀態：尚未完成修課替代 ☐";
   }
 });
+function renderCourseCards(courses){
+  const wrap = document.getElementById("courseCards");
+  if(!wrap) return;
+
+  wrap.innerHTML = courses.map(c => {
+    const statusText = c.status === "passed" ? "通過" : (c.status === "taking" ? "修課中" : "未通過");
+    const statusClass = c.status === "passed" ? "ok" : "bad";
+
+    return `
+      <div class="courseCard" data-id="${c.id}">
+        <div class="courseCard__top">
+          <div>
+            <h3 class="courseTitle">${escapeHtml(c.name)}</h3>
+            <div class="courseMeta">
+              <div><b>分類：</b>${escapeHtml(c.category)}</div>
+              <div><b>學分：</b>${escapeHtml(String(c.credits))}</div>
+            </div>
+
+            <div class="badges">
+              <span class="badgePill">${escapeHtml(c.category)}</span>
+              <span class="badgePill ${statusClass}">${statusText}</span>
+            </div>
+
+            <div class="cardActions">
+              <button class="danger" data-action="delete">刪除</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  // 事件：刪除（用事件委派）
+  wrap.onclick = (e) => {
+    const btn = e.target.closest("button[data-action='delete']");
+    if(!btn) return;
+    const card = e.target.closest(".courseCard");
+    if(!card) return;
+    const id = card.dataset.id;
+    // ✅ 這裡呼叫你原本的刪除方法（把 removeCourseById 換成你專案裡的函式）
+    if(typeof App?.removeCourseById === "function"){
+      App.removeCourseById(id);
+    }
+  };
+}
+
+// 小工具：避免 XSS / 特殊字元破版
+function escapeHtml(str){
+  return String(str)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
