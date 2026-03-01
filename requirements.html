@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>畢業門檻｜畢業檢核</title>
+  <link rel="stylesheet" href="./styles.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+  <header class="header">
+    <div class="wrap">
+      <div class="header-inner">
+        <div class="brand">
+          <h1 class="site-title">Graduation Checker</h1>
+          <p class="site-sub">英文門檻（可選）× 時數 × 學分｜可匯出 PDF</p>
+        </div>
+
+        <nav class="nav">
+          <a href="./credits.html">學分</a>
+          <a class="active" href="./requirements.html">畢業門檻</a>
+          <a href="./about.html">關於</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <h2 class="section-title">Requirements</h2>
+    <p class="section-note">以「字重層級」呈現狀態：標題（Semi-bold）、小標（Medium）、內文（Regular）、資訊（細字）。</p>
+
+    <div class="grid">
+<section class="card">
+  <div class="card__inner">
+
+    <h1 class="h1">Graduation Requirements</h1>
+    <p class="p" style="margin-top:1.099537037vw;">
+      以編輯式排版呈現門檻設定：字重分層、留白呼吸、模組一致。
+    </p>
+
+    <!-- Sticky progress (optional but very “reference”) -->
+    <div class="progressSticky mt-l">
+      <div class="progressRow is-on" id="step1">
+        <span class="circle"></span><p>門檻設定</p>
+      </div>
+      <div class="progressRow" id="step2">
+        <span class="circle"></span><p>個人資料</p>
+      </div>
+      <div class="progressRow" id="step3">
+        <span class="circle"></span><p>匯出報告</p>
+      </div>
+    </div>
+
+    <div class="inputs">
+
+      <!-- 門檻設定 -->
+      <div class="inputs__input" data-step="1">
+        <div class="inputs__inputTtl">
+          <div class="badge"><p>REQ</p></div>
+          <p>畢業門檻設定</p>
+        </div>
+
+        <div class="inputs__inputValueTtl"><p>總學分需求</p></div>
+        <div class="inputs__inputValue">
+            <!-- Custom Checkbox Row -->
+<div class="checkRow" style="margin-top:1.099537037vw;">
+  <label class="check">
+    <input type="checkbox" id="courseSubDone">
+    <span class="checkbox"></span>
+  </label>
+
+  <p class="checkText">
+    我已完成「修課替代」
+    （可點 <span class="onClick" id="openRule">查看規則</span>）
+  </p>
+</div>
+
+<!-- optional：顯示狀態 -->
+<p class="p" id="courseSubStatus" style="margin-top:1.099537037vw; opacity:.8;"></p>
+          <input id="reqTotalCredits" type="number" min="0" step="1" value="128" />
+        </div>
+
+        <div class="inputs__inputValueTtl" style="margin-top:1.099537037vw;"><p>服務 / 活動時數需求</p></div>
+        <div class="inputs__inputValue">
+          <input id="reqHoursMin" type="number" min="0" step="1" value="18" />
+        </div>
+
+        <div class="inputs__inputValueTtl" style="margin-top:1.099537037vw;"><p>必修最低學分（校定 + 系）</p></div>
+        <div class="inputs__inputValue">
+          <input id="reqCoreMin" type="number" min="0" step="1" value="0" />
+        </div>
+
+        <div class="inputs__inputValueTtl" style="margin-top:1.099537037vw;"><p>英文門檻類型</p></div>
+        <div class="inputs__inputValue inputs__inputValueSelect">
+          <select id="reqEnglishType">
+            <option value="TOEIC">TOEIC</option>
+            <option value="GEPT">GEPT</option>
+            <option value="CAMPUS">校內測驗</option>
+            <option value="COURSE">修課替代</option>
+          </select>
+        </div>
+
+        <div id="englishRuleBox" style="margin-top:1.099537037vw;"></div>
+
+        <div class="btns">
+          <button class="primary" id="saveReqBtn">儲存門檻</button>
+        </div>
+
+        <ul class="noticeList">
+          <li>英文門檻會依你選擇的類型顯示對應欄位（分數 / 級數 / 通過）。</li>
+          <li>資料儲存在瀏覽器（localStorage），清除快取會消失。</li>
+        </ul>
+      </div>
+
+      <!-- 個人資料 -->
+      <div class="inputs__input" data-step="2">
+        <div class="inputs__inputTtl">
+          <div class="badge opt"><p>OPT</p></div>
+          <p>你的完成狀態</p>
+        </div>
+
+        <div class="inputs__inputValueTtl"><p>已完成時數</p></div>
+        <div class="inputs__inputValue">
+          <input id="userHours" type="number" min="0" step="1" value="0" />
+        </div>
+
+        <div class="inputs__inputValueTtl" style="margin-top:1.099537037vw;"><p>英文類型</p></div>
+        <div class="inputs__inputValue inputs__inputValueSelect">
+          <select id="userEnglishType">
+            <option value="TOEIC">TOEIC</option>
+            <option value="GEPT">GEPT</option>
+            <option value="CAMPUS">校內測驗</option>
+            <option value="COURSE">修課替代</option>
+          </select>
+        </div>
+
+        <div id="englishUserBox" style="margin-top:1.099537037vw;"></div>
+
+        <div class="btns">
+          <button class="primary" id="saveUserBtn">儲存</button>
+          <button id="exportPdfBtn">匯出 PDF</button>
+        </div>
+
+        <div id="reqSummary" style="margin-top:2.1990740741vw;"></div>
+      </div>
+
+      <!-- 未達標清單 -->
+      <div class="inputs__input" data-step="3">
+        <div class="inputs__inputTtl">
+          <div class="badge"><p>REQ</p></div>
+          <p>未達標清單</p>
+        </div>
+        <ul id="todoList" class="noticeList"></ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+      <aside class="card">
+        <div class="card-inner">
+          <h3 class="section-title" style="margin:0">你的資料</h3>
+          <p class="section-note">通常英文類型會跟門檻一致（系統也會自動同步）。</p>
+
+          <div class="row">
+            <div>
+              <label>已完成時數</label>
+              <input id="userHours" type="number" min="0" step="1" value="0" />
+            </div>
+            <div>
+              <label>英文類型</label>
+              <select id="userEnglishType">
+                <option value="TOEIC">TOEIC</option>
+                <option value="GEPT">GEPT</option>
+                <option value="CAMPUS">校內測驗</option>
+                <option value="COURSE">修課替代</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="englishUserBox"></div>
+
+          <div class="btns">
+            <button class="primary" id="saveUserBtn">儲存</button>
+            <button id="exportPdfBtn">匯出 PDF</button>
+          </div>
+
+          <div style="margin-top:14px" id="reqSummary"></div>
+        </div>
+      </aside>
+    </div>
+
+    <section class="card" style="margin-top:18px">
+      <div class="card-inner">
+        <h3 class="section-title" style="margin:0">未達標清單</h3>
+        <p class="section-note">系統會列出「差多少」或「缺哪一項」。</p>
+        <ul id="todoList" class="section-note" style="margin:0; padding-left:18px"></ul>
+      </div>
+    </section>
+  </main>
+
+  <script src="./app.js"></script>
+  <script>App.initRequirementsPage();</script>
+</body>
+</html>

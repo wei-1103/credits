@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>學分｜畢業檢核</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="wrap">
+      <div class="header-inner">
+        <div class="brand">
+          <h1 class="site-title">Graduation Checker</h1>
+          <p class="site-sub">學分計算 × 畢業門檻檢核（資料本機保存）</p>
+        </div>
+
+        <nav class="nav">
+          <a class="active" href="./credits.html">學分</a>
+          <a href="./requirements.html">畢業門檻</a>
+          <a href="./about.html">關於</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <h2 class="section-title">Credits</h2>
+    <p class="section-note">用「字重」與「留白」呈現資訊層級。課程模組結構一致：分類、課名、學分、狀態。</p>
+
+    <div class="grid">
+      <section class="card">
+        <div class="poster" aria-hidden="true"></div>
+        <div class="card-inner">
+          <div class="module">
+            <h3 class="section-title" style="margin:0">新增課程</h3>
+
+            <div class="row">
+              <div>
+                <label>課名</label>
+                <input id="courseName" placeholder="例：日語聽解（二）" />
+              </div>
+              <div>
+                <label>課程分類</label>
+                <select id="courseCat"></select>
+              </div>
+            </div>
+
+            <div class="row">
+              <div>
+                <label>學分</label>
+                <input id="courseCredits" type="number" min="0" step="0.5" value="2" />
+              </div>
+              <div>
+                <label>狀態</label>
+                <select id="coursePassed">
+                  <option value="true">通過</option>
+                  <option value="false">未通過 / 修課中</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="btns">
+              <button class="primary" id="addCourseBtn">新增</button>
+              <button id="seedBtn">示例</button>
+              <button class="danger" id="clearBtn">清空</button>
+            </div>
+
+            <div class="notice">
+              <b>貼上 CSV 匯入</b>（每行一門課）<br>
+              格式：<b>課名,分類,學分,狀態</b><br>
+              狀態可寫：通過 / 未通過 / 修課中 / true / false
+            </div>
+
+            <label>CSV 內容</label>
+            <textarea id="csvInput" placeholder="課名,分類,學分,狀態&#10;日語會話（二）,系必修,2,通過"></textarea>
+
+            <div class="btns">
+              <button class="primary" id="importCsvBtn">匯入（覆蓋）</button>
+              <button id="appendCsvBtn">追加匯入</button>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <aside class="card">
+        <div class="card-inner">
+          <h3 class="section-title" style="margin:0">摘要</h3>
+          <p class="section-note">僅計入「通過」課程。總學分上限依畢業門檻設定。</p>
+
+          <div class="kpi" id="creditKpi"></div>
+
+          <div style="margin-top:16px">
+            <label style="margin-top:0">總學分進度</label>
+            <div class="progress"><div class="bar" id="totalBar"></div></div>
+          </div>
+
+          <div style="margin-top:14px" id="catStats"></div>
+        </div>
+      </aside>
+    </div>
+
+    <section class="card" style="margin-top:18px">
+      <div class="card-inner">
+        <h3 class="section-title" style="margin:0">課程清單</h3>
+        <p class="section-note">模組化列表：結構一致，方便管理大量課程。</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>課名</th>
+                <th>分類</th>
+                <th>學分</th>
+                <th>狀態</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="courseTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="./app.js"></script>
+  <script>App.initCreditsPage();</script>
+</body>
+</html>
