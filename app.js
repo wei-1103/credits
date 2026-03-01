@@ -1225,3 +1225,23 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+document.addEventListener("DOMContentLoaded", () => {
+  const btn = document.getElementById("sendMailBtn");
+  const textarea = document.getElementById("suggestText");
+
+  if (btn && textarea) {
+    btn.addEventListener("click", () => {
+      const content = textarea.value.trim();
+      if (!content) {
+        alert("請輸入建議內容");
+        return;
+      }
+
+      const subject = encodeURIComponent("Graduation Checker 使用建議");
+      const body = encodeURIComponent(content);
+
+      window.location.href =
+        `mailto:ztingwei333@gmail.com?subject=${subject}&body=${body}`;
+    });
+  }
+});
