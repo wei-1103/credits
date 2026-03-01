@@ -1,4 +1,3 @@
-<!doctype html>
 <html lang="zh-Hant">
 <head>
   <meta charset="utf-8" />
@@ -13,7 +12,7 @@
       <div class="header-inner">
         <div class="brand">
           <h1 class="site-title">Graduation Checker</h1>
-          <p class="site-sub">英文門檻× 時數 × 學分｜可匯出 PDF</p>
+          <p class="site-sub">英文門檻 × 時數 × 學分｜可匯出 PDF</p>
         </div>
 
         <nav class="nav">
@@ -29,215 +28,145 @@
     <h2 class="section-title">Requirements</h2>
     <p class="section-note">這是畢業門檻設定以及完成狀態。</p>
 
-    <div class="grid">
-<section class="card">
+    <!-- 系規定（可選） -->
     <section class="card" style="margin-top:18px">
-  <div class="card-inner">
-    <h3 class="section-title" style="margin:0">系規定（可選）</h3>
-    <p class="section-note">不同學校/不同科系可自行開關與設定專業選修領域規則。</p>
+      <div class="card-inner">
+        <h3 class="section-title" style="margin:0">系規定（可選）</h3>
+        <p class="section-note">不同學校/不同科系可自行開關與設定專業選修領域規則。</p>
 
-    <div class="row">
-      <div>
-        <label>啟用系規定</label>
-        <select id="deptEnabled">
-          <option value="false">不啟用</option>
-          <option value="true">啟用</option>
-        </select>
-      </div>
+        <div class="row">
+          <div>
+            <label>啟用系規定</label>
+            <select id="deptEnabled">
+              <option value="false">不啟用</option>
+              <option value="true">啟用</option>
+            </select>
+          </div>
 
-      <div>
-        <label>外系選修至少門數</label>
-        <input id="deptOutsideMin" type="number" min="0" step="1" value="2" />
-      </div>
-    </div>
-
-    <div class="row" style="margin-top:12px">
-      <div>
-        <label>啟用「專業選修領域規則」</label>
-        <select id="deptElectiveEnabled">
-          <option value="false">不啟用</option>
-          <option value="true">啟用</option>
-        </select>
-      </div>
-
-      <div class="notice">
-        你可以針對不同學校新增不同領域，新增課程時（分類=專業選修）就會要求選領域。
-      </div>
-    </div>
-
-    <div class="row" style="margin-top:12px">
-      <div>
-        <label>同領域至少門數（例如 2）</label>
-        <input id="deptSameFieldMin" type="number" min="0" step="1" value="2" />
-      </div>
-      <div>
-        <label>跨領域至少領域數（例如 3）</label>
-        <input id="deptCrossFieldMin" type="number" min="0" step="1" value="3" />
-      </div>
-    </div>
-
-    <div style="margin-top:14px">
-      <h4 class="section-title" style="margin:0 0 10px">專業選修領域清單</h4>
-
-      <div class="row">
-        <div>
-          <label>新增領域名稱</label>
-          <input id="newFieldName" placeholder="例：資料科學與應用" />
-        </div>
-        <div class="btns" style="align-items:flex-end">
-          <button class="primary" id="addFieldBtn">新增領域</button>
-          <button id="clearFieldsBtn" class="danger">清空領域</button>
-        </div>
-      </div>
-
-      <div class="table-wrap" style="margin-top:12px">
-        <table>
-          <thead>
-            <tr>
-              <th>領域名稱</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody id="fieldTable"></tbody>
-        </table>
-      </div>
-
-      <div class="notice" style="margin-top:12px">
-        小提醒：如果你刪除某個領域，已經選到該領域的課程仍會保留 fieldId，但它會顯示不出名稱；你可以再去編輯/刪掉那些課程。
-      </div>
-    </div>
-
-    <div class="btns" style="margin-top:14px">
-      <button class="primary" id="saveDeptBtn">儲存系規定設定</button>
-    </div>
-  </div>
-</section>
-  <div class="card__inner">
-
-    <h1 class="h1">Graduation Requirements</h1>
-    <p class="p" style="margin-top:1.099537037vw;">
-      我的電腦有夠燙，我還沒有用Cookie(暫時只能暫存)。
-    </p>
-
-    <!-- Sticky progress (optional but very “reference”) -->
-    <div class="progressSticky mt-l">
-      <div class="progressRow is-on" id="step1">
-        <span class="circle"></span><p>門檻設定</p>
-      </div>
-      <div class="progressRow" id="step2">
-        <span class="circle"></span><p>個人資料</p>
-      </div>
-      <div class="progressRow" id="step3">
-        <span class="circle"></span><p>匯出報告</p>
-      </div>
-    </div>
-
-    <div class="inputs">
-
-      <!-- 門檻設定 -->
-      <div class="inputs__input" data-step="1">
-        <div class="inputs__inputTtl">
-          <div class="badge"><p>REQ</p></div>
-          <p>畢業門檻設定</p>
+          <div>
+            <label>外系選修至少門數</label>
+            <input id="deptOutsideMin" type="number" min="0" step="1" value="2" />
+          </div>
         </div>
 
-        <div class="inputs__inputValueTtl"><p>總學分需求</p></div>
-        <div class="inputs__inputValue">
-            <!-- Custom Checkbox Row -->
-<div class="checkRow" style="margin-top:1.099537037vw;">
-  <label class="check">
-    <input type="checkbox" id="courseSubDone">
-    <span class="checkbox"></span>
-  </label>
+        <div class="row" style="margin-top:12px">
+          <div>
+            <label>啟用「專業選修領域規則」</label>
+            <select id="deptElectiveEnabled">
+              <option value="false">不啟用</option>
+              <option value="true">啟用</option>
+            </select>
+          </div>
 
-  <p class="checkText">
-    我已完成「修課替代」
-    （可點 <span class="onClick" id="openRule">查看規則</span>）
-  </p>
-</div>
-
-<!-- optional：顯示狀態 -->
-<p class="p" id="courseSubStatus" style="margin-top:1.099537037vw; opacity:.8;"></p>
-          <input id="reqTotalCredits" type="number" min="0" step="1" value="128" />
+          <div class="notice">
+            你可以針對不同學校新增不同領域；新增課程時（分類=專業選修）就會要求選領域。
+          </div>
         </div>
 
-        <div class="inputs__inputValueTtl" style="margin-top:1.099537037vw;"><p>服務 / 活動時數需求</p></div>
-        <div class="inputs__inputValue">
-          <input id="reqHoursMin" type="number" min="0" step="1" value="18" />
+        <div class="row" style="margin-top:12px">
+          <div>
+            <label>同領域至少門數（例如 2）</label>
+            <input id="deptSameFieldMin" type="number" min="0" step="1" value="2" />
+          </div>
+          <div>
+            <label>跨領域至少領域數（例如 3）</label>
+            <input id="deptCrossFieldMin" type="number" min="0" step="1" value="3" />
+          </div>
         </div>
 
-        <div class="inputs__inputValueTtl" style="margin-top:1.099537037vw;"><p>必修最低學分（校定 + 系）</p></div>
-        <div class="inputs__inputValue">
-          <input id="reqCoreMin" type="number" min="0" step="1" value="0" />
+        <div style="margin-top:14px">
+          <h4 class="section-title" style="margin:0 0 10px">專業選修領域清單</h4>
+
+          <div class="row">
+            <div>
+              <label>新增領域名稱</label>
+              <input id="newFieldName" placeholder="例：資料科學與應用" />
+            </div>
+            <div class="btns" style="align-items:flex-end">
+              <button type="button" class="primary" id="addFieldBtn">新增領域</button>
+              <button type="button" id="clearFieldsBtn" class="danger">清空領域</button>
+            </div>
+          </div>
+
+          <div class="table-wrap" style="margin-top:12px">
+            <table>
+              <thead>
+                <tr>
+                  <th>領域名稱</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="fieldTable"></tbody>
+            </table>
+          </div>
+
+          <div class="notice" style="margin-top:12px">
+            小提醒：如果你刪除某個領域，已經選到該領域的課程仍會保留 fieldId；你可以再去學分頁編輯/刪掉那些課程。
+          </div>
         </div>
 
-        <div class="inputs__inputValueTtl" style="margin-top:1.099537037vw;"><p>英文門檻類型</p></div>
-        <div class="inputs__inputValue inputs__inputValueSelect">
-          <select id="reqEnglishType">
-            <option value="TOEIC">TOEIC</option>
-            <option value="GEPT">GEPT</option>
-            <option value="CAMPUS">校內測驗</option>
-            <option value="COURSE">修課替代</option>
-          </select>
+        <div class="btns" style="margin-top:14px">
+          <button type="button" class="primary" id="saveDeptBtn">儲存系規定設定</button>
         </div>
-
-        <div id="englishRuleBox" style="margin-top:1.099537037vw;"></div>
-
-        <div class="btns">
-          <button class="primary" id="saveReqBtn">儲存門檻</button>
-        </div>
-
-        <ul class="noticeList">
-          <li>英文門檻會依你選擇的類型顯示對應欄位（分數 / 級數 / 通過）。</li>
-          <li>資料儲存在瀏覽器，清除快取會消失。</li>
-        </ul>
       </div>
+    </section>
 
-      <!-- 個人資料 -->
-      <div class="inputs__input" data-step="2">
-        <div class="inputs__inputTtl">
-          <div class="badge opt"><p>OPT</p></div>
-          <p>你的完成狀態</p>
+    <div class="grid" style="margin-top:18px">
+      <!-- 左：門檻設定 -->
+      <section class="card">
+        <div class="card-inner">
+          <h3 class="section-title" style="margin:0">畢業門檻設定</h3>
+          <p class="section-note">資料儲存在瀏覽器 localStorage，清除快取會消失。</p>
+
+          <!-- 修課替代 checkbox -->
+          <div class="checkRow" style="margin-top:12px;">
+            <label class="check">
+              <input type="checkbox" id="courseSubDone">
+              <span class="checkbox"></span>
+            </label>
+
+            <p class="checkText">
+              我已完成「修課替代」（可點 <span class="onClick" id="openRule">查看規則</span>）
+            </p>
+          </div>
+          <p class="section-note" id="courseSubStatus" style="margin-top:10px; opacity:.8;"></p>
+
+          <div class="row">
+            <div>
+              <label>總學分需求</label>
+              <input id="reqTotalCredits" type="number" min="0" step="1" value="128" />
+            </div>
+            <div>
+              <label>服務 / 活動時數需求</label>
+              <input id="reqHoursMin" type="number" min="0" step="1" value="18" />
+            </div>
+          </div>
+
+          <div class="row" style="margin-top:12px">
+            <div>
+              <label>必修最低學分（校定 + 系）</label>
+              <input id="reqCoreMin" type="number" min="0" step="1" value="0" />
+            </div>
+            <div>
+              <label>英文門檻類型</label>
+              <select id="reqEnglishType">
+                <option value="TOEIC">TOEIC</option>
+                <option value="GEPT">GEPT</option>
+                <option value="CAMPUS">校內測驗</option>
+                <option value="COURSE">修課替代</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="englishRuleBox" style="margin-top:12px"></div>
+
+          <div class="btns">
+            <button type="button" class="primary" id="saveReqBtn">儲存門檻</button>
+          </div>
         </div>
+      </section>
 
-        <div class="inputs__inputValueTtl"><p>已完成時數</p></div>
-        <div class="inputs__inputValue">
-          <input id="userHours" type="number" min="0" step="1" value="0" />
-        </div>
-
-        <div class="inputs__inputValueTtl" style="margin-top:1.099537037vw;"><p>英文類型</p></div>
-        <div class="inputs__inputValue inputs__inputValueSelect">
-          <select id="userEnglishType">
-            <option value="TOEIC">TOEIC</option>
-            <option value="GEPT">GEPT</option>
-            <option value="CAMPUS">校內測驗</option>
-            <option value="COURSE">修課替代</option>
-          </select>
-        </div>
-
-        <div id="englishUserBox" style="margin-top:1.099537037vw;"></div>
-
-        <div class="btns">
-          <button class="primary" id="saveUserBtn">儲存</button>
-          <button id="exportPdfBtn">匯出 PDF</button>
-        </div>
-
-        <div id="reqSummary" style="margin-top:2.1990740741vw;"></div>
-      </div>
-
-      <!-- 未達標清單 -->
-      <div class="inputs__input" data-step="3">
-        <div class="inputs__inputTtl">
-          <div class="badge"><p>REQ</p></div>
-          <p>未達標清單</p>
-        </div>
-        <ul id="todoList" class="noticeList"></ul>
-      </div>
-
-    </div>
-  </div>
-</section>
-
+      <!-- 右：你的資料 -->
       <aside class="card">
         <div class="card-inner">
           <h3 class="section-title" style="margin:0">你的資料</h3>
@@ -259,11 +188,11 @@
             </div>
           </div>
 
-          <div id="englishUserBox"></div>
+          <div id="englishUserBox" style="margin-top:12px"></div>
 
           <div class="btns">
-            <button class="primary" id="saveUserBtn">儲存</button>
-            <button id="exportPdfBtn">匯出 PDF</button>
+            <button type="button" class="primary" id="saveUserBtn">儲存</button>
+            <button type="button" id="exportPdfBtn">匯出 PDF</button>
           </div>
 
           <div style="margin-top:14px" id="reqSummary"></div>
@@ -271,6 +200,7 @@
       </aside>
     </div>
 
+    <!-- 未達標清單 -->
     <section class="card" style="margin-top:18px">
       <div class="card-inner">
         <h3 class="section-title" style="margin:0">未達標清單</h3>
@@ -280,13 +210,7 @@
     </section>
   </main>
 
-  
   <script src="./app.js"></script>
-  
-  <script>App.initRequirementsPage(
-
-    
-  );</script>
-  
+  <script>App.initRequirementsPage();</script>
 </body>
 </html>

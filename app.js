@@ -188,14 +188,16 @@ const App = (() => {
 
     if (!fieldRow || !sel) return;
 
-    const rule = state.requirements.deptRule?.electiveRule;
+    // 取得規則路徑
+    const deptRule = state.requirements.deptRule;
+    const electiveRule = deptRule?.electiveRule;
 
-    // 條件：系規則啟用 + electiveRule 啟用 + 分類是專業選修
-    if (state.requirements.deptRule?.enabled && rule?.enabled && cat === "專業選修") {
+    // 修正後的判斷：系規則啟用 + 選修領域規則啟用 + 分類是專業選修
+    if (deptRule?.enabled && electiveRule?.enabled && cat === "專業選修") {
       fieldRow.style.display = "block";
 
-      // options
-      const options = (rule.fields || []).map(f =>
+      const fields = electiveRule.fields || [];
+      const options = fields.map(f =>
         `<option value="${escapeHtml(f.id)}">${escapeHtml(f.name)}</option>`
       ).join("");
 
@@ -203,6 +205,7 @@ const App = (() => {
     } else {
       fieldRow.style.display = "none";
       sel.innerHTML = `<option value="">請選擇領域</option>`;
+      sel.value = ""; // 清空選擇值
     }
   }
 
@@ -239,7 +242,6 @@ const App = (() => {
 
       const isOutsideDept = $("courseOutsideDept")?.checked || false;
 
-      // ✅ 專業選修領域：存 id（對應 electiveRule.fields）
       let fieldId = "";
       const needField =
         state.requirements.deptRule?.enabled &&
@@ -260,11 +262,10 @@ const App = (() => {
         cat,
         credits,
         passed,
-        fieldId,        // ✅ 專業選修領域（id）
-        isOutsideDept   // ✅ 外系選修
+        fieldId,
+        isOutsideDept
       });
 
-      // 清空欄位（留 credits）
       $("courseName").value = "";
       $("courseOutsideDept").checked = false;
       if ($("courseField")) $("courseField").value = "";
@@ -486,7 +487,6 @@ const App = (() => {
       `;
     }).join("");
 
-    // 事件委派：刪除
     wrap.onclick = (e) => {
       const btn = e.target.closest("button[data-action='delete']");
       if (!btn) return;
@@ -605,129 +605,137 @@ const App = (() => {
     $("englishUserBox").innerHTML = englishUserUI($("userEnglishType").value);
   }
 
-  function initRequirementsPage() {
+  // --------------------------
+  // ✅ Dept rule UI (Requirements page)
+  // --------------------------
+  let deptUIInited = false;
 
-    function renderDeptRuleUI(){
-  const R = state.requirements;
-  const D = R.deptRule;
+  function renderDeptRuleUI() {
+    const D = state.requirements?.deptRule;
+    if (!D) return;
 
-  // 安全保底
-  if(!D) return;
+    const deptEnabled = document.getElementById("deptEnabled");
+    const deptOutsideMin = document.getElementById("deptOutsideMin");
+    const deptElectiveEnabled = document.getElementById("deptElectiveEnabled");
+    const deptSameFieldMin = document.getElementById("deptSameFieldMin");
+    const deptCrossFieldMin = document.getElementById("deptCrossFieldMin");
 
-  // 同步 UI
-  const deptEnabled = document.getElementById("deptEnabled");
-  const deptOutsideMin = document.getElementById("deptOutsideMin");
-  const deptElectiveEnabled = document.getElementById("deptElectiveEnabled");
-  const deptSameFieldMin = document.getElementById("deptSameFieldMin");
-  const deptCrossFieldMin = document.getElementById("deptCrossFieldMin");
+    if (deptEnabled) deptEnabled.value = String(!!D.enabled);
+    if (deptOutsideMin) deptOutsideMin.value = Number(D.outsideDeptMin ?? 2);
 
-  if(deptEnabled) deptEnabled.value = String(!!D.enabled);
-  if(deptOutsideMin) deptOutsideMin.value = Number(D.outsideDeptMin ?? 2);
+    if (deptElectiveEnabled) deptElectiveEnabled.value = String(!!D.electiveRule?.enabled);
+    if (deptSameFieldMin) deptSameFieldMin.value = Number(D.electiveRule?.sameFieldMin ?? 2);
+    if (deptCrossFieldMin) deptCrossFieldMin.value = Number(D.electiveRule?.crossFieldMin ?? 3);
 
-  if(deptElectiveEnabled) deptElectiveEnabled.value = String(!!D.electiveRule?.enabled);
-  if(deptSameFieldMin) deptSameFieldMin.value = Number(D.electiveRule?.sameFieldMin ?? 2);
-  if(deptCrossFieldMin) deptCrossFieldMin.value = Number(D.electiveRule?.crossFieldMin ?? 3);
+    const tbody = document.getElementById("fieldTable");
+    if (!tbody) return;
 
-  // 畫領域表格
-  const tbody = document.getElementById("fieldTable");
-  if(!tbody) return;
+    const fields = D.electiveRule?.fields || [];
+    tbody.innerHTML = "";
 
-  const fields = D.electiveRule?.fields || [];
-  tbody.innerHTML = "";
-
-  if(fields.length === 0){
-    const tr = document.createElement("tr");
-    tr.innerHTML = `<td class="muted" colspan="2">尚未新增領域</td>`;
-    tbody.appendChild(tr);
-    return;
-  }
-
-  for(const f of fields){
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${escapeHtml(f.name)}</td>
-      <td><button class="danger" data-del-field="${escapeHtml(f.id)}">刪除</button></td>
-    `;
-    tbody.appendChild(tr);
-  }
-
-  // 刪除按鈕
-  tbody.querySelectorAll("[data-del-field]").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      const id = btn.dataset.delField;
-      state.requirements.deptRule.electiveRule.fields =
-        (state.requirements.deptRule.electiveRule.fields || []).filter(x => x.id !== id);
-
-      saveState();
-      renderDeptRuleUI();
-      // 這會影響 credits 頁面的領域下拉，所以也要保持資料正確
-      renderRequirements();
-       renderDeptRuleUI();
-    });
-  });
-}
-
-function initDeptRuleUI(){
-  // requirements.html 沒有這些元素就直接跳過（避免報錯）
-  if(!document.getElementById("saveDeptBtn")) return;
-
-  // 初次渲染
-  renderDeptRuleUI();
-
-  // 新增領域
-  document.getElementById("addFieldBtn")?.addEventListener("click", ()=>{
-    const input = document.getElementById("newFieldName");
-    const name = (input?.value || "").trim();
-    if(!name){ alert("請輸入領域名稱"); return; }
-
-    const fields = state.requirements.deptRule.electiveRule.fields || [];
-    // 避免重複名稱
-    if(fields.some(f => f.name === name)){
-      alert("這個領域名稱已存在");
+    if (fields.length === 0) {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td class="muted" colspan="2">尚未新增領域</td>`;
+      tbody.appendChild(tr);
       return;
     }
 
-    fields.push({ id: crypto.randomUUID(), name });
-    state.requirements.deptRule.electiveRule.fields = fields;
+    for (const f of fields) {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${escapeHtml(f.name)}</td>
+        <td><button type="button" class="danger" data-del-field="${escapeHtml(f.id)}">刪除</button></td>
+      `;
+      tbody.appendChild(tr);
+    }
+  }
 
-    if(input) input.value = "";
+  function initDeptRuleUI() {
+    if (!document.getElementById("saveDeptBtn")) return;
 
-    saveState();
+    // ✅ 只綁一次事件
+    if (!deptUIInited) {
+      deptUIInited = true;
+
+      // 刪除（事件委派，綁一次即可）
+      const tbody = document.getElementById("fieldTable");
+      if (tbody) {
+        tbody.addEventListener("click", (e) => {
+          const btn = e.target.closest("[data-del-field]");
+          if (!btn) return;
+
+          const id = btn.dataset.delField;
+          state.requirements.deptRule.electiveRule.fields =
+            (state.requirements.deptRule.electiveRule.fields || []).filter(x => x.id !== id);
+
+          saveState();
+          renderDeptRuleUI();
+          renderRequirements();
+        });
+      }
+
+      document.getElementById("addFieldBtn")?.addEventListener("click", (e) => {
+        e.preventDefault();
+        const input = document.getElementById("newFieldName");
+        const name = (input?.value || "").trim();
+        if (!name) { alert("請輸入領域名稱"); return; }
+
+        const fields = state.requirements.deptRule.electiveRule.fields || [];
+        if (fields.some(f => f.name === name)) {
+          alert("這個領域名稱已存在");
+          return;
+        }
+
+        fields.push({ id: crypto.randomUUID(), name });
+        state.requirements.deptRule.electiveRule.fields = fields;
+
+        if (input) input.value = "";
+
+        saveState();
+        renderDeptRuleUI();
+        renderRequirements();
+      });
+
+      document.getElementById("clearFieldsBtn")?.addEventListener("click", (e) => {
+        e.preventDefault();
+        if (!confirm("確定要清空所有領域嗎？")) return;
+        state.requirements.deptRule.electiveRule.fields = [];
+        saveState();
+        renderDeptRuleUI();
+        renderRequirements();
+      });
+
+      document.getElementById("saveDeptBtn")?.addEventListener("click", (e) => {
+        e.preventDefault();
+        const D = state.requirements.deptRule;
+
+        D.enabled = document.getElementById("deptEnabled")?.value === "true";
+        D.outsideDeptMin = Number(document.getElementById("deptOutsideMin")?.value || 0);
+
+        D.electiveRule.enabled = document.getElementById("deptElectiveEnabled")?.value === "true";
+        D.electiveRule.sameFieldMin = Number(document.getElementById("deptSameFieldMin")?.value || 0);
+        D.electiveRule.crossFieldMin = Number(document.getElementById("deptCrossFieldMin")?.value || 0);
+
+        if (!Array.isArray(D.electiveRule.fields)) D.electiveRule.fields = [];
+
+        saveState();
+        renderDeptRuleUI();
+        renderRequirements();
+
+        alert("系規定已儲存 ✅\n\n提醒：如果你啟用『專業選修領域規則』，新增課程（分類=專業選修）就會要求選領域。");
+      });
+    }
+
+    // 每次進頁面都重畫一次 UI（但不重綁事件）
     renderDeptRuleUI();
-    renderRequirements();
-  });
+  }
 
-  // 清空領域
-  document.getElementById("clearFieldsBtn")?.addEventListener("click", ()=>{
-    if(!confirm("確定要清空所有領域嗎？")) return;
-    state.requirements.deptRule.electiveRule.fields = [];
-    saveState();
-    renderDeptRuleUI();
-    renderRequirements();
-  });
-
-  // 儲存系規定設定
-  document.getElementById("saveDeptBtn")?.addEventListener("click", ()=>{
-    const D = state.requirements.deptRule;
-
-    D.enabled = document.getElementById("deptEnabled")?.value === "true";
-    D.outsideDeptMin = Number(document.getElementById("deptOutsideMin")?.value || 0);
-
-    D.electiveRule.enabled = document.getElementById("deptElectiveEnabled")?.value === "true";
-    D.electiveRule.sameFieldMin = Number(document.getElementById("deptSameFieldMin")?.value || 0);
-    D.electiveRule.crossFieldMin = Number(document.getElementById("deptCrossFieldMin")?.value || 0);
-
-    // fields 保底
-    if(!Array.isArray(D.electiveRule.fields)) D.electiveRule.fields = [];
-
-    saveState();
-    renderDeptRuleUI();
-    renderRequirements();
-
-    alert("系規定已儲存 ✅\n\n提醒：如果你啟用『專業選修領域規則』，新增課程（分類=專業選修）就會要求選領域。");
-  });
-}
+  // --------------------------
+  // Requirements page init
+  // --------------------------
+  function initRequirementsPage() {
     state = loadState();
+    initDeptRuleUI();
 
     $("reqTotalCredits").value = state.requirements.totalCredits;
     $("reqHoursMin").value = state.requirements.hoursMin;
@@ -793,7 +801,6 @@ function initDeptRuleUI(){
 
     $("exportPdfBtn").addEventListener("click", exportPdf);
 
-    // 你原本的 step UI（保留，不影響）
     function setStep(n) {
       document.getElementById("step1")?.classList.toggle("is-on", n === 1);
       document.getElementById("step2")?.classList.toggle("is-on", n === 2);
@@ -827,24 +834,20 @@ function initDeptRuleUI(){
     const todo = [];
     const checks = [];
 
-    // credits
     const okCredits = total >= R.totalCredits;
     checks.push(["總學分", okCredits, `${total} / ${R.totalCredits}`]);
     if (!okCredits) todo.push(`總學分還差 ${Math.max(0, R.totalCredits - total)} 學分`);
 
-    // core min
     const okCore = (R.coreMin <= 0) ? true : (core >= R.coreMin);
     if (R.coreMin > 0) {
       checks.push(["必修最低學分（校定+系）", okCore, `${core} / ${R.coreMin}`]);
       if (!okCore) todo.push(`必修（校定+系）還差 ${Math.max(0, R.coreMin - core)} 學分`);
     }
 
-    // hours
     const okHours = state.user.hours >= R.hoursMin;
     checks.push(["時數門檻", okHours, `${state.user.hours} / ${R.hoursMin} 小時`]);
     if (!okHours) todo.push(`時數還差 ${Math.max(0, R.hoursMin - state.user.hours)} 小時`);
 
-    // english
     const e = englishCheck();
     checks.push([`英文門檻（${R.englishType}）`, e.ok, e.msg]);
     if (!e.ok) {
@@ -860,7 +863,6 @@ function initDeptRuleUI(){
     if (D?.enabled) {
       const passedCourses = state.courses.filter(c => c.passed);
 
-      // 1) 指定必修（用課名比對）
       if (Array.isArray(D.requiredDesignated) && D.requiredDesignated.length > 0) {
         const hitRequired = passedCourses.filter(c => D.requiredDesignated.includes(c.name)).length;
         const okReq = hitRequired >= Number(D.requiredDesignatedMin || 0);
@@ -869,14 +871,12 @@ function initDeptRuleUI(){
         if (!okReq) todo.push(`指定必修還差 ${Math.max(0, D.requiredDesignatedMin - hitRequired)} 門`);
       }
 
-      // 2) 外系選修（用 isOutsideDept）
       const outsideCount = passedCourses.filter(c => !!c.isOutsideDept).length;
       const okOutside = outsideCount >= Number(D.outsideDeptMin || 0);
 
       checks.push(["系規定：外系選修", okOutside, `${outsideCount} / ${D.outsideDeptMin} 門`]);
       if (!okOutside) todo.push(`外系選修還差 ${Math.max(0, D.outsideDeptMin - outsideCount)} 門`);
 
-      // 3) 專業選修領域（用 fieldId）
       const ER = D.electiveRule;
       if (ER?.enabled) {
         const electives = passedCourses.filter(c => c.cat === "專業選修" && c.fieldId);
@@ -1029,7 +1029,7 @@ function initDeptRuleUI(){
   return {
     initCreditsPage,
     initRequirementsPage,
-    removeCourseById // ✅ 給卡片用
+    removeCourseById
   };
 })();
 
