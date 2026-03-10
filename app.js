@@ -573,6 +573,239 @@ const App = (() => {
     };
   }
 
+    // --------------------------
+  // Schedule page
+  // --------------------------
+  const SCHEDULE_DAYS = ["一", "二", "三", "四", "五", "六", "日"];
+
+  function initSchedulePage() {
+    state = loadState();
+
+    $("addScheduleBtn")?.addEventListener("click", () => {
+      const name = $("scheduleName")?.value.trim();
+      const day = $("scheduleDay")?.value;
+      const start = Number($("scheduleStart")?.value || 0);
+      const end = Number($("scheduleEnd")?.value || 0);
+      const room = $("scheduleRoom")?.value.trim() || "";
+      const teacher = $("scheduleTeacher")?.value.trim() || "";
+
+      if (!name) {
+        alert("請輸入課名");
+        return;
+      }
+
+      if (!day) {
+        alert("請選擇星期");
+        return;
+      }
+
+      if (start <= 0 || end <= 0) {
+        alert("請選擇正確節次");
+        return;
+      }
+
+      if (start > end) {
+        alert("開始節次不可大於結束節次");
+        return;
+      }
+
+      state.schedule.unshift({
+        id: crypto.randomUUID(),
+        name,
+        day,
+        start,
+        end,
+        room,
+        teacher
+      });
+
+      saveState();
+      clearScheduleForm();
+      renderSchedulePage();
+    });
+
+    $("seedScheduleBtn")?.addEventListener("click", () => {
+      state.schedule = [
+        {
+          id: crypto.randomUUID(),
+          name: "資料庫系統",
+          day: "三",
+          start: 3,
+          end: 4,
+          room: "M203",
+          teacher: "王老師"
+        },
+        {
+          id: crypto.randomUUID(),
+          name: "經濟學",
+          day: "二",
+          start: 3,
+          end: 4,
+          room: "B101",
+          teacher: "陳老師"
+        },
+        {
+          id: crypto.randomUUID(),
+          name: "英文閱讀",
+          day: "一",
+          start: 1,
+          end: 2,
+          room: "A305",
+          teacher: "林老師"
+        }
+      ];
+
+      saveState();
+      renderSchedulePage();
+    });
+
+    $("clearScheduleBtn")?.addEventListener("click", () => {
+      if (!confirm("確定要清空整份課表嗎？")) return;
+      state.schedule = [];
+      saveState();
+      renderSchedulePage();
+    });
+
+    renderSchedulePage();
+  }
+
+  function clearScheduleForm() {
+    if ($("scheduleName")) $("scheduleName").value = "";
+    if ($("scheduleDay")) $("scheduleDay").value = "一";
+    if ($("scheduleStart")) $("scheduleStart").value = "1";
+    if ($("scheduleEnd")) $("scheduleEnd").value = "1";
+    if ($("scheduleRoom")) $("scheduleRoom").value = "";
+    if ($("scheduleTeacher")) $("scheduleTeacher").value = "";
+  }
+
+  function removeScheduleById(id) {
+    state.schedule = state.schedule.filter(item => item.id !== id);
+    saveState();
+    renderSchedulePage();
+  }
+
+  function renderSchedulePage() {
+    renderScheduleKpi();
+    renderScheduleTable();
+    renderScheduleList();
+  }
+
+  function renderScheduleKpi() {
+    const kpi = $("scheduleKpi");
+    const summary = $("scheduleSummary");
+    if (!kpi || !summary) return;
+
+    const totalCourses = state.schedule.length;
+
+    const byDay = {};
+    for (const d of SCHEDULE_DAYS) byDay[d] = 0;
+
+    for (const item of state.schedule) {
+      if (byDay[item.day] !== undefined) {
+        byDay[item.day] += 1;
+      }
+    }
+
+    kpi.innerHTML = `
+      <div class="pill">本學期課程：${totalCourses} 門</div>
+    `;
+
+    const usedDays = SCHEDULE_DAYS.filter(d => byDay[d] > 0);
+
+    if (totalCourses === 0) {
+      summary.innerHTML = `<div class="section-note">目前尚未加入任何課表課程。</div>`;
+      return;
+    }
+
+    summary.innerHTML = `
+      <div class="section-note">有課的日期：${usedDays.length ? usedDays.join("、") : "無"}</div>
+      ${SCHEDULE_DAYS.map(d => `<div class="section-note">${d}：${byDay[d]} 門</div>`).join("")}
+    `;
+  }
+
+  function renderScheduleTable() {
+    const tbody = $("scheduleTableBody");
+    if (!tbody) return;
+
+    const cellMap = {};
+    const rows = [];
+
+    for (let period = 1; period <= 13; period++) {
+      rows.push(`<tr>
+        <td>${period}</td>
+        <td data-day="一" data-period="${period}"></td>
+        <td data-day="二" data-period="${period}"></td>
+        <td data-day="三" data-period="${period}"></td>
+        <td data-day="四" data-period="${period}"></td>
+        <td data-day="五" data-period="${period}"></td>
+        <td data-day="六" data-period="${period}"></td>
+        <td data-day="日" data-period="${period}"></td>
+      </tr>`);
+    }
+
+    tbody.innerHTML = rows.join("");
+
+    tbody.querySelectorAll("td[data-day][data-period]").forEach(td => {
+      const key = `${td.dataset.day}-${td.dataset.period}`;
+      cellMap[key] = td;
+    });
+
+    for (const item of state.schedule) {
+      for (let p = item.start; p <= item.end; p++) {
+        const key = `${item.day}-${p}`;
+        const td = cellMap[key];
+        if (!td) continue;
+
+        const block = document.createElement("div");
+        block.style.padding = "6px";
+        block.style.borderRadius = "10px";
+        block.style.background = "#f6f6f6";
+        block.style.marginBottom = "6px";
+        block.style.fontSize = "14px";
+        block.style.lineHeight = "1.5";
+        block.innerHTML = `
+          <div style="font-weight:700;">${escapeHtml(item.name)}</div>
+          ${item.room ? `<div>${escapeHtml(item.room)}</div>` : ""}
+          ${item.teacher ? `<div>${escapeHtml(item.teacher)}</div>` : ""}
+        `;
+        td.appendChild(block);
+      }
+    }
+  }
+
+  function renderScheduleList() {
+    const tbody = $("scheduleList");
+    if (!tbody) return;
+
+    tbody.innerHTML = "";
+
+    if (!state.schedule || state.schedule.length === 0) {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td colspan="6" class="muted">尚未新增課表課程</td>`;
+      tbody.appendChild(tr);
+      return;
+    }
+
+    for (const item of state.schedule) {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${escapeHtml(item.name)}</td>
+        <td>${escapeHtml(item.day)}</td>
+        <td>第 ${item.start} ~ ${item.end} 節</td>
+        <td>${escapeHtml(item.room || "-")}</td>
+        <td>${escapeHtml(item.teacher || "-")}</td>
+        <td><button type="button" class="danger" data-del-schedule="${item.id}">刪除</button></td>
+      `;
+      tbody.appendChild(tr);
+    }
+
+    tbody.querySelectorAll("[data-del-schedule]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        removeScheduleById(btn.dataset.delSchedule);
+      });
+    });
+  }
+
   // --------------------------
   // Requirements / English
   // --------------------------
@@ -1188,6 +1421,7 @@ const App = (() => {
   return {
     initCreditsPage,
     initRequirementsPage,
+    initSchedulePage,
     removeCourseById,
     get state() {
       return state;

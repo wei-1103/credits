@@ -1775,7 +1775,7 @@ a, a:visited{
 
 .poster img{
   width: 100%;
-  height: 300px;     /* 你想要多高就改這裡 */
+  height: 800px;     /* 你想要多高就改這裡 */
   object-fit: cover; /* 自動裁切成橫幅 */
   display: block;
 }

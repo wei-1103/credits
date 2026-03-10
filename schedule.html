@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>課表｜畢業檢核</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="wrap">
+      <div class="header-inner">
+        <div class="brand">
+          <h1 class="site-title">Graduation Checker</h1>
+          <p class="site-sub">本學期課表 × 課程安排 × 學習規劃</p>
+        </div>
+
+        <nav class="nav">
+          <a href="./credits.html">學分</a>
+          <a href="./requirements.html">畢業門檻</a>
+          <a class="active" href="./schedule.html">課表</a>
+          <a href="./about.html">關於</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <h2 class="section-title">Schedule</h2>
+    <p class="section-note">這裡可以管理你這學期的課表，之後也可以再和學分頁連動。</p>
+
+    <div class="grid">
+      <!-- 左邊：新增課程 -->
+      <section class="card">
+        <div class="poster" aria-hidden="true"></div>
+        <div class="card-inner">
+          <div class="module">
+            <h3 class="section-title" style="margin:0">新增課表課程</h3>
+
+            <div class="row">
+              <div>
+                <label>課名</label>
+                <input id="scheduleName" placeholder="例：資料庫系統" />
+              </div>
+              <div>
+                <label>星期</label>
+                <select id="scheduleDay">
+                  <option value="一">星期一</option>
+                  <option value="二">星期二</option>
+                  <option value="三">星期三</option>
+                  <option value="四">星期四</option>
+                  <option value="五">星期五</option>
+                  <option value="六">星期六</option>
+                  <option value="日">星期日</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="row">
+              <div>
+                <label>開始節次</label>
+                <select id="scheduleStart">
+                  <option value="1">第1節</option>
+                  <option value="2">第2節</option>
+                  <option value="3">第3節</option>
+                  <option value="4">第4節</option>
+                  <option value="5">第5節</option>
+                  <option value="6">第6節</option>
+                  <option value="7">第7節</option>
+                  <option value="8">第8節</option>
+                  <option value="9">第9節</option>
+                  <option value="10">第10節</option>
+                  <option value="11">第11節</option>
+                  <option value="12">第12節</option>
+                  <option value="13">第13節</option>
+                </select>
+              </div>
+              <div>
+                <label>結束節次</label>
+                <select id="scheduleEnd">
+                  <option value="1">第1節</option>
+                  <option value="2">第2節</option>
+                  <option value="3">第3節</option>
+                  <option value="4">第4節</option>
+                  <option value="5">第5節</option>
+                  <option value="6">第6節</option>
+                  <option value="7">第7節</option>
+                  <option value="8">第8節</option>
+                  <option value="9">第9節</option>
+                  <option value="10">第10節</option>
+                  <option value="11">第11節</option>
+                  <option value="12">第12節</option>
+                  <option value="13">第13節</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="row">
+              <div>
+                <label>教室</label>
+                <input id="scheduleRoom" placeholder="例：M203" />
+              </div>
+              <div>
+                <label>老師</label>
+                <input id="scheduleTeacher" placeholder="例：王老師" />
+              </div>
+            </div>
+
+            <div class="btns">
+              <button class="primary" id="addScheduleBtn" type="button">新增課程</button>
+              <button id="seedScheduleBtn" type="button">示例</button>
+              <button class="danger" id="clearScheduleBtn" type="button">清空課表</button>
+            </div>
+
+            <div class="notice">
+              建議先從這學期正在修的課開始輸入。之後可以再擴充成和學分頁同步的版本。
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 右邊：摘要 -->
+      <aside class="card">
+        <div class="card-inner">
+          <h3 class="section-title" style="margin:0">課表摘要</h3>
+          <p class="section-note">快速查看這學期安排了幾門課、分布在哪幾天。</p>
+
+          <div class="kpi" id="scheduleKpi">
+            <div class="pill">本學期課程：0 門</div>
+          </div>
+
+          <div style="margin-top:14px" id="scheduleSummary"></div>
+        </div>
+      </aside>
+    </div>
+
+    <!-- 週課表 -->
+    <section class="card" style="margin-top:18px">
+      <div class="card-inner">
+        <h3 class="section-title" style="margin:0">週課表</h3>
+        <p class="section-note">顯示你這學期每週固定課程安排。</p>
+
+        <div class="table-wrap">
+          <table id="scheduleTable">
+            <thead>
+              <tr>
+                <th>節次</th>
+                <th>一</th>
+                <th>二</th>
+                <th>三</th>
+                <th>四</th>
+                <th>五</th>
+                <th>六</th>
+                <th>日</th>
+              </tr>
+            </thead>
+            <tbody id="scheduleTableBody">
+              <tr><td>1</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>2</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>3</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>4</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>5</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>6</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>7</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>8</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>9</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>10</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>11</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>12</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>13</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 課程清單 -->
+    <section class="card" style="margin-top:18px">
+      <div class="card-inner">
+        <h3 class="section-title" style="margin:0">課表清單</h3>
+        <p class="section-note">列出這學期所有已加入的課表課程。</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>課名</th>
+                <th>星期</th>
+                <th>節次</th>
+                <th>教室</th>
+                <th>老師</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="scheduleList"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="./app.js"></script>
+  <script>
+    if (App.initSchedulePage) {
+      App.initSchedulePage();
+    }
+  </script>
+</body>
+</html>
