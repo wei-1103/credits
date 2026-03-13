@@ -1830,5 +1830,28 @@ a, a:visited{
   padding-left:18px;
   line-height:1.8;
   font-size:14px;
+}
+
+/* 預設：電腦不顯示 */
+.bottom-nav{
+  display:none;
+}
+
+/* 手機才顯示 */
+@media (max-width:768px){
+
+  .bottom-nav{
+    display:flex;
+    position:fixed;
+    bottom:16px;
+    left:50%;
+    transform:translateX(-50%);
+    width:90%;
+    background:#f3f2f5;
+    border-radius:30px;
+    justify-content:space-around;
+    padding:10px;
+    box-shadow:0 4px 10px rgba(0,0,0,0.1);
+  }
 
 }
