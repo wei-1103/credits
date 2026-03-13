@@ -1,167 +1,181 @@
 <!doctype html>
 <html lang="zh-Hant">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Graduation Checker</title>
-
-<style>
-
-:root{
-  --ink:#282621;
-  --paper:#fffdf7;
-}
-
-/* ===== Reset ===== */
-*{ box-sizing:border-box; }
-
-a{
-  text-decoration:none;
-  color:inherit;
-}
-
-a:visited,
-a:active{
-  color:inherit;
-}
-
-/* ===== Page Base ===== */
-body{
-  margin:0;
-  min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background: var(--paper);
-  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans TC", sans-serif;
-  color:var(--ink);
-  letter-spacing:.02em;
-
-  background-image:
-    radial-gradient(rgba(0,0,0,.02) 1px, transparent 1px);
-  background-size: 4px 4px;
-}
-
-/* 左上角小字 */
-.edition{
-  position:fixed;
-  top:20px;
-  left:20px;
-  font-size:12px;
-  letter-spacing:.12em;
-  text-transform:uppercase;
-  opacity:.6;
-}
-
-/* 中央卡片 */
-.intro-card{
-  width:100%;
-  max-width:520px;
-  padding:64px 56px;
-  border:1px solid rgba(40,38,33,.2);
-  border-radius:20px;
-  backdrop-filter: blur(16px);
-  background: rgba(255,255,255,.7);
-  text-align:center;
-
-  opacity:0;
-  transform: translateY(20px);
-  animation: fadeIn 1s ease forwards;
-}
-
-/* 標題 */
-.intro-title{
-  margin:0 0 18px;
-  font-size:18px;
-  font-weight:700;
-  letter-spacing:.12em;
-  text-transform:uppercase;
-}
-
-/* 副標 */
-.intro-sub{
-  margin:0 0 48px;
-  font-size:14px;
-  line-height:1.8;
-  opacity:.75;
-}
-
-/* 按鈕 */
-.intro-btn{
-  display:inline-block;
-  padding:10px 26px;
-  border:1px solid var(--ink);
-  border-radius:999px;
-  font-size:14px;
-  letter-spacing:.12em;
-  text-transform:uppercase;
-  transition:.35s cubic-bezier(.27,.83,.64,1);
-}
-
-.intro-btn:hover{
-  background:var(--ink);
-  color:#fff;
-}
-
-/* 淡入 */
-@keyframes fadeIn{
-  to{
-    opacity:1;
-    transform: translateY(0);
-  }
-}
-
-/* =========================
-   📱 Mobile Optimization
-   ========================= */
-@media(max-width:768px){
-
-  body{
-    padding:20px;
-    align-items:center;
-  }
-
-  .intro-card{
-    padding:48px 28px;
-  }
-
-  .intro-title{
-    font-size:17px;
-  }
-
-  .intro-sub{
-    font-size:14px;
-    margin-bottom:36px;
-  }
-
-  .intro-btn{
-    font-size:14px;
-    padding:10px 22px;
-  }
-
-  .edition{
-    top:14px;
-    left:16px;
-    font-size:11px;
-  }
-}
-
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>首頁｜畢業檢核</title>
+  <link rel="stylesheet" href="./styles.css" />
 </head>
-
 <body>
+  <header class="header">
+    <div class="wrap">
+      <div class="header-inner">
+        <div class="brand">
+          <h1 class="site-title">Graduation Checker</h1>
+          <p class="site-sub">學分管理 × 畢業門檻 × 本學期課表</p>
+        </div>
 
-<div class="edition">wei</div>
+        <nav class="nav">
+          <a class="active" href="./index.html">首頁</a>
+          <a href="./credits.html">學分</a>
+          <a href="./requirements.html">畢業門檻</a>
+          <a href="./schedule.html">課表</a>
+          <a href="./about.html">關於</a>
+        </nav>
+      </div>
+    </div>
+  </header>
 
-<div class="intro-card">
-  <h1 class="intro-title">Graduation Checker</h1>
-  <p class="intro-sub">
-    畢業學分與門檻檢核系統<br>
-    阿彌陀佛希望能畢業
-  </p>
+  <main class="wrap">
+    <!-- Hero -->
+    <section class="card" style="margin-top:18px;">
+      <div class="card-inner" style="padding:32px 24px;">
+        <div class="module" style="align-items:flex-start; gap:16px;">
+          <h2 class="h1" style="margin:0;">Graduation Checker</h2>
+          <p class="p" style="max-width:720px;">
+            這是一個幫助學生整理課程、計算學分、檢查畢業門檻，並管理本學期課表的系統。
+            你可以快速查看目前修課進度，了解自己距離畢業還差多少。
+          </p>
 
-  <a href="requirements.html" class="intro-btn">Enter</a>
-</div>
+          <div class="btns" style="margin-top:4px;">
+            <a href="./requirements.html" class="home-btn home-btn--primary">開始檢查畢業進度</a>
+            <a href="./credits.html" class="home-btn">前往學分管理</a>
+          </div>
+        </div>
+      </div>
+    </section>
 
+    <!-- 功能入口 -->
+    <section style="margin-top:18px;">
+      <h3 class="section-title" style="margin:0 0 12px;">主要功能</h3>
+
+      <div class="home-grid">
+        <a class="home-feature card" href="./credits.html">
+          <div class="card-inner">
+            <h3 class="section-title" style="margin:0 0 10px;">學分管理</h3>
+            <p class="section-note" style="margin:0;">
+              新增課程、計算學分、查看各分類累積情況，作為畢業檢核的基礎資料。
+            </p>
+          </div>
+        </a>
+
+        <a class="home-feature card" href="./requirements.html">
+          <div class="card-inner">
+            <h3 class="section-title" style="margin:0 0 10px;">畢業門檻</h3>
+            <p class="section-note" style="margin:0;">
+              設定總學分、英文門檻、時數與系規定，快速判斷是否達到畢業條件。
+            </p>
+          </div>
+        </a>
+
+        <a class="home-feature card" href="./schedule.html">
+          <div class="card-inner">
+            <h3 class="section-title" style="margin:0 0 10px;">本學期課表</h3>
+            <p class="section-note" style="margin:0;">
+              整理這學期修課安排，快速查看每週課程分布與課表內容。
+            </p>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- 進度摘要 -->
+    <section style="margin-top:18px;">
+      <div class="grid">
+        <section class="card">
+          <div class="card-inner">
+            <h3 class="section-title" style="margin:0;">畢業進度摘要</h3>
+            <p class="section-note">這裡會根據你目前已輸入的資料，自動顯示學分進度。</p>
+
+            <div class="kpi" id="homeKpi">
+              <div class="pill">總學分：0 / 128</div>
+              <div class="pill">完成率：0%</div>
+            </div>
+
+            <div style="margin-top:16px">
+              <label style="margin-top:0">總學分進度</label>
+              <div class="progress">
+                <div class="bar" id="homeTotalBar"></div>
+              </div>
+            </div>
+
+            <div id="homeSummary" style="margin-top:14px;"></div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card-inner">
+            <h3 class="section-title" style="margin:0;">系統簡介</h3>
+            <p class="section-note">
+              這個系統以學生最常遇到的三件事為核心：
+            </p>
+
+            <ul class="home-list">
+              <li>整理已修課程與學分</li>
+              <li>檢查是否達成畢業門檻</li>
+              <li>管理本學期課表與修課安排</li>
+            </ul>
+
+            <div class="notice" style="margin-top:14px;">
+              目前資料暫時儲存在瀏覽器 localStorage。若清除瀏覽器資料，內容可能會消失。
+            </div>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      const STORAGE_KEY = "grad_checker_split_v1";
+
+      function safeLoad() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return null;
+          return JSON.parse(raw);
+        } catch {
+          return null;
+        }
+      }
+
+      const state = safeLoad() || {};
+      const courses = Array.isArray(state.courses) ? state.courses : [];
+      const requirements = state.requirements || {};
+      const totalNeed = Number(requirements.totalCredits || 128);
+
+      const passedCourses = courses.filter(c => c && c.passed);
+      const totalPassed = passedCourses.reduce((sum, c) => sum + Number(c.credits || 0), 0);
+      const percent = totalNeed > 0 ? Math.min(100, Math.round((totalPassed / totalNeed) * 100)) : 0;
+
+      const byCat = {};
+      for (const c of passedCourses) {
+        const cat = c.cat || "其他";
+        byCat[cat] = (byCat[cat] || 0) + Number(c.credits || 0);
+      }
+
+      const kpi = document.getElementById("homeKpi");
+      const bar = document.getElementById("homeTotalBar");
+      const summary = document.getElementById("homeSummary");
+
+      if (kpi) {
+        kpi.innerHTML = `
+          <div class="pill ${totalPassed >= totalNeed ? "ok" : "bad"}">總學分：${totalPassed} / ${totalNeed}</div>
+          <div class="pill">完成率：${percent}%</div>
+        `;
+      }
+
+      if (bar) {
+        bar.style.width = percent + "%";
+      }
+
+      if (summary) {
+        const entries = Object.entries(byCat);
+        summary.innerHTML = entries.length
+          ? entries.map(([k, v]) => `<div class="section-note" style="margin-bottom:6px;">• ${k}：${v} 學分</div>`).join("")
+          : `<div class="section-note">目前尚未有已通過課程資料。</div>`;
+      }
+    })();
+  </script>
 </body>
 </html>

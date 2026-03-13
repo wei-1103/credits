@@ -1779,3 +1779,55 @@ a, a:visited{
   object-fit: cover; /* 自動裁切成橫幅 */
   display: block;
 }
+
+/* =========================
+   Home page
+   ========================= */
+
+.home-grid{
+  display:grid;
+  grid-template-columns: 1fr;
+  gap:18px;
+}
+
+@media (min-width: 980px){
+  .home-grid{
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.home-feature{
+  display:block;
+  text-decoration:none;
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.home-feature:hover{
+  transform: translateY(-2px);
+}
+
+.home-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:10px 16px;
+  border:1px solid var(--ink);
+  border-radius:999px;
+  color:var(--ink);
+  background:#fff;
+  text-decoration:none;
+  font-size:14px;
+  font-weight:600;
+}
+
+.home-btn--primary{
+  background:var(--ink);
+  color:#fff;
+}
+
+.home-list{
+  margin:0;
+  padding-left:18px;
+  line-height:1.8;
+  font-size:14px;
+}
